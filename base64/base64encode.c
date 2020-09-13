@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 
-const char b64_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+const char b64_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"; //Acceptable chars
 
 size_t b64_length(size_t s_length)
 {
@@ -37,12 +37,13 @@ char *b64_encode(char *str)
 	char *enc = (char*) malloc((b64_size + 1) * sizeof(char)); // New base64 encoded string
 	memset(enc, 0, b64_size);
 
+	printf("Old length: %ld New length: %ld\n", s_length, b64_size);
+
 	char *start = enc;
 
 	enc[b64_size] = '\0';
 
 	for(s_offset = 0, e_offset = 0; count < s_length;){
-		printf("str byte: %c enc byte: %c\n", *str, *enc);
 
 		*enc |= (*str & (0xC0 >> s_offset)) >> 2;
 
@@ -53,15 +54,16 @@ char *b64_encode(char *str)
 			str++;
 			count++;
 		}
-		if(!e_offset) enc++;
+		if(!e_offset){
+			*enc = b64_chars[*enc];
+			printf("enc byte: %x \n", *enc);
+			enc++;
+		}
 	}
-
-	enc = start;
-
-	for(int i = 0; i < 
 
 	memset(enc, 0x3D, b64_size);
 
+	return start;
 }
 
 int main(int argc, char **argv)
@@ -70,11 +72,11 @@ int main(int argc, char **argv)
 		printf("Usage: %s [ string ]\n", argv[0]);
 		exit(0);
 	}
-
+	
 	printf("Encoding: %s\n", argv[1]);
 
 	char *enc = b64_encode(argv[1]);
 
-	printf("%s\n", start);
+	printf("%s\n", enc);
 	return 0;
 }

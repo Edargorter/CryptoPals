@@ -79,7 +79,7 @@ char* b64_encode(char *str)
 
 		*enc |= ((*str << s_offset) & 0xC0) >> e_offset;
 
-		printf("%d: "BYTE_TO_BINARY_PATTERN" Str: "BYTE_TO_BINARY_PATTERN"\n", e_count, BYTE_TO_BINARY(*enc), BYTE_TO_BINARY(*str));
+//		printf("%d: "BYTE_TO_BINARY_PATTERN" Str: "BYTE_TO_BINARY_PATTERN"\n", e_count, BYTE_TO_BINARY(*enc), BYTE_TO_BINARY(*str));
 
 		s_offset = (s_offset + 2) % 8;
 		e_offset = (e_offset + 2) % 8;

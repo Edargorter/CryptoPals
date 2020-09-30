@@ -18,7 +18,7 @@ for i in range(0, len(hexstr), 2):
     c = int(hexstr[i:i+2], 16)
     out_string += chr(c)
 
-print("Chars: %s" % out_string)
+print("Chars: \"%s\"" % out_string)
 
 #Or, in hex bytes 
 out_string = ""

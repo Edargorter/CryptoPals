@@ -99,11 +99,6 @@ char* b64_encode(char *str)
 		}
 	}
 
-	if(e_offset){
-		enc++;	
-		e_count++;
-	}
-
 	memset(enc, 0x40, b64_len - e_count);
 	//printf("s_offset: %d e_offset: %d e_count: %d b64_len: %ld\n", s_offset, e_offset, e_count, b64_len);
 

@@ -1,41 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-//Convenient. From: https://stackoverflow.com/questions/111928/is-there-a-printf-converter-to-print-in-binary-format
-#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
-#define BYTE_TO_BINARY(byte)  \
-  (byte & 0x80 ? '1' : '0'), \
-  (byte & 0x40 ? '1' : '0'), \
-  (byte & 0x20 ? '1' : '0'), \
-  (byte & 0x10 ? '1' : '0'), \
-  (byte & 0x08 ? '1' : '0'), \
-  (byte & 0x04 ? '1' : '0'), \
-  (byte & 0x02 ? '1' : '0'), \
-  (byte & 0x01 ? '1' : '0') 
-
-#define DEBUG 1
-
-//Needs uppercase hex values E.g. 0x3C
-char* chars_to_hex(char* hex_string, int n)
-{
-	char* arr = malloc(sizeof(char) * n/2);
-	int big = 1;
-	int index = 0;
-	for(int i = 0; i < n; i++){
-		if(hex_string[i] < 58)
-			arr[index] += hex_string[i] - 48;
-		else
-			arr[index] += hex_string[i] - 55;
-			
-		if(big)
-			arr[index] *= 0x10;
-		else
-			index++;
-		big = !big;
-	}	
-	return arr;
-}
+#include "../lib/local_lib.h"
 
 int main(int argc, char **argv)
 {
@@ -55,8 +18,8 @@ int main(int argc, char **argv)
 		exit(2);
 	}
 
-	char* a_hex = chars_to_hex(a, n);
-	char* b_hex = chars_to_hex(b, n);
+	char* a_hex = chars_to_hex(a, n, 0);
+	char* b_hex = chars_to_hex(b, n, 0);
 	char* xored = malloc(sizeof(char) * n/2);
 
 	for(int i = 0; i < n/2; i++){

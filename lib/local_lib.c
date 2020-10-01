@@ -11,17 +11,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-//Needs uppercase hex values E.g. 0x3C
-char* chars_to_hex(char* hex_string, int n)
+//Convert from hex chars to byte array 
+char* chars_to_hex(char* hex_string, int n, int upper)
 {
 	char* arr = malloc(sizeof(char) * n/2);
 	int big = 1;
+	int l_offset = upper ? 55 : 85;
 	int index = 0;
 	for(int i = 0; i < n; i++){
 		if(hex_string[i] < 58)
 			arr[index] += hex_string[i] - 48;
 		else
-			arr[index] += hex_string[i] - 55;
+			arr[index] += hex_string[i] - l_offset;
 			
 		if(big)
 			arr[index] *= 0x10;

@@ -7,6 +7,14 @@
 
 **/
 
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#ifndef CRYPTOPAL_LIB
+#define CRYPTOPAL_LIB
+
 //Convenient. From: https://stackoverflow.com/questions/111928/is-there-a-printf-converter-to-print-in-binary-format
 #define byte_to_bin_format "%c%c%c%c%c%c%c%c"
 #define byte_to_bin_convert(byte)  \
@@ -21,4 +29,6 @@
 
 #define DEBUG 1
 
-char* chars_to_hex(char* hex_string, int n);
+char* chars_to_hex(char* hex_string, int n, int upper);
+
+#endif 

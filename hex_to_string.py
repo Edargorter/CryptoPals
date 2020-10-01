@@ -21,6 +21,13 @@ for i in range(0, len(hexstr), 2):
 print("Chars: \"%s\"" % out_string)
 
 #Or, in hex bytes 
+
+out_string = ""
+for i in range(0, len(hexstr), 2):
+    out_string += hexstr[i:i+2].upper()
+
+print("Bytes: %s" % out_string)
+
 out_string = ""
 for i in range(0, len(hexstr), 2):
     out_string += "\\x" + hexstr[i:i+2]

@@ -48,13 +48,59 @@ char* chars_to_hex(char* hex_string, int n)
 	return arr;
 }
 
-size_t b64_length(size_t s_length)
+inline size_t b64_length(size_t len)
 {
-	size_t b64_len = s_length;
-	b64_len += (b64_len % 3) ? 3 - (b64_len % 3) : 0;
-	b64_len /= 3;
-	b64_len *= 4;
-	return b64_len;
+	len += (len % 3) ? 3 - (len % 3) : 0;
+	len /= 3;
+	len *= 4;
+	return len;
+}
+
+inline size_t dec_length(size_t len, char padding)
+{
+	len /= 4;
+	len *= 3;
+	len -= (size_t) padding;
+	return len;
+}
+
+char* b64_decode(char *enc)
+{
+	size_t b64_len = strlen(enc);
+	size_t count = b64_len;
+
+	while(!(enc[--count] ^ 0x3D)); //Get padding 
+
+	char padding = char (b64_len - count);
+	size_t s_length = dec_length(b64_len, padding);
+
+	char *str = (char*) malloc((s_length + 1) * sizeof(char)); //New base64 decoded string
+	str[s_length] = "\0";
+	char* start = str;
+
+	char s_offset = 0;
+	char e_offset = 2;
+	int i = 0;
+	
+	while(i < count){
+		*str |= ((*enc << e_offset) & 0xC0) >> s_offset;
+
+		s_offset = (s_offset + 2) % 8;
+		e_offset = (e_offset + 2) % 8;
+
+		if(!s_offset){
+			str++;
+			i++;
+		}
+
+		if(!e_offset){
+			enc++;
+			e_offset += 2;
+		}
+
+	}
+
+	return start;
 }
 
 char* b64_encode(char *str)
@@ -69,8 +115,6 @@ char* b64_encode(char *str)
 	char *enc = (char*) malloc((b64_len + 1) * sizeof(char)); // New base64 encoded string
 	memset(enc, 0, b64_len);
 
-	//printf("Old length: %ld New length: %ld\n", s_length, b64_len);
-
 	char *start = enc;
 	int e_count = 0;
 
@@ -78,11 +122,7 @@ char* b64_encode(char *str)
 
 	while(count < s_length){
 
-		//printf("%d\n", count);
-
 		*enc |= ((*str << s_offset) & 0xC0) >> e_offset;
-
-		//printf("%d: "BYTE_TO_BINARY_PATTERN" Str: "BYTE_TO_BINARY_PATTERN" %ld\n", e_count, BYTE_TO_BINARY(*enc), BYTE_TO_BINARY(*str), count);
 
 		s_offset = (s_offset + 2) % 8;
 		e_offset = (e_offset + 2) % 8;
@@ -100,7 +140,6 @@ char* b64_encode(char *str)
 	}
 
 	memset(enc, 0x40, b64_len - e_count);
-	//printf("s_offset: %d e_offset: %d e_count: %d b64_len: %ld\n", s_offset, e_offset, e_count, b64_len);
 
 	for(int i = 0; i < b64_len; i++){
 		start[i] = b64_chars[start[i]];	
@@ -111,26 +150,6 @@ char* b64_encode(char *str)
 
 int main(int argc, char **argv)
 {
-/**
-	char test[] = "49276D206B696C6C696E6720796F757220627261696E206C696B65206120706F69736F6E6F7573206D757368726F6F6D41";
-	char aim[] = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
-	int n = sizeof(test)/sizeof(char);
-
-	//Convert hex chars to actual byte array 
-	char* bytes = chars_to_hex(test, n);
-
-	printf("Hex Encoding: %s\n", test);
-	printf("Char Encoding: %s\n", bytes);
-	printf("Binary:\n");
-
-	char *enc = b64_encode(bytes);
-	int b64_len = b64_length((size_t)(n/2));
-
-	printf("%s\n", enc);
-
-	if(DEBUG) return 0;
-**/
-
 	if(argc < 2){
 		printf("Usage: %s [ string ]\n", argv[0]);
 		exit(0);
